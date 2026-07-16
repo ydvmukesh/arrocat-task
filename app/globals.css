@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-size: 62.5%;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+  }
+}
+
+:root {
+  --base-padding: 2.4rem;
+  --gutter-width: 1.2rem;
+  --grid-columns: 16;
+}
+
+/* Animation-specific CSS variables and transforms that GSAP controls */
+@layer components {
+  .slide-animations {
+    --slide-progress-before: 0;
+    --slide-progress-in: 0;
+    --slide-progress-out: 0;
+    --slide-progress-end: 0;
+    --slide-progress-last-child-out: 0;
+    --fast-in: 1.5;
+    --fast-out: 1.75;
+    --fast-end: 1.75;
+    --shorted-progress-in: min(calc(var(--slide-progress-in) * var(--fast-in)), 1);
+    --shorted-progress-out: min(calc(var(--slide-progress-out) * var(--fast-out)), 1);
+    --shorted-progress-end: min(calc(var(--slide-progress-end) * var(--fast-end)), 1);
+    --grid-offset-right: calc(19% + 2.8rem);
+    --grid-offset-left: calc(-19% - 2.8rem);
+  }
+
+  /* First slide image animation */
+  .slide-first .slide-image-transform {
+    --delay-in: clamp(0, calc(var(--slide-progress-in) * 2 - 1), 1);
+    transform: translateX(calc(var(--shorted-progress-out) * (var(--grid-offset-left))))
+      translateX(calc(var(--shorted-progress-end) * -2.8rem))
+      scale(calc(var(--shorted-progress-in) - var(--shorted-progress-out) * 0.81))
+      scale(calc(1 - var(--shorted-progress-end)));
+  }
+
+  /* Last slide content animation */
+  .slide-last .slide-content-transform {
+    --fade-in: clamp(0, (var(--slide-progress-in) - var(--start)) / (1 - var(--start)), 1);
+    --fade-out: 1;
+  }
+
+  /* Last slide image animation */
+  .slide-last .slide-image-inner {
+    --scale-in: 0.4;
+    --scale-out: 0.2;
+    transform: scale(
+        calc(
+          1 / (var(--slide-scale-in) - var(--slide-scale-out) * 0.5) +
+            var(--slide-progress-last-child-out) * var(--scale-out) +
+            0.1 * (1 - var(--slide-progress-in))
+        )
+      )
+      translateY(calc(var(--slide-progress-last-child-out) * 10vh));
+  }
+
+  /* Slide image container animations */
+  .slide-image-transform {
+    border-radius: calc(
+      16px * (1 + 4 * var(--slide-progress-out)) * (1 + 4 * (1 - var(--shorted-progress-in)))
+    );
+    --slide-scale-in: calc(var(--shorted-progress-in) * 0.81 + 0.19 * var(--slide-progress-before));
+    --slide-scale-out: var(--shorted-progress-out) * 0.81;
+    --slide-scale-end: calc(1 - var(--shorted-progress-end));
+    transform: translateX(calc((1 - var(--shorted-progress-in)) * var(--grid-offset-right)))
+      translateX(calc(var(--shorted-progress-out) * var(--grid-offset-left)))
+      translateX(calc(var(--shorted-progress-end) * -2.8rem))
+      scale(calc(var(--slide-scale-in) - var(--slide-scale-out)))
+      scale(var(--slide-scale-end));
+  }
+
+  /* Inner image scale animation */
+  .slide-image-inner {
+    transform: scale(
+      calc(
+        1 / (var(--slide-scale-in) - var(--slide-scale-out) * 0.5) +
+          0.1 * (1 - var(--slide-progress-in))
+      )
+    );
+  
+  }
+
+  /* Content opacity animation */
+  .slide-content-transform {
+    --start: 0.6;
+    --fade-end: 0.7;
+    --end: 0.1;
+    --fade-in: clamp(0, ((var(--slide-progress-in) - var(--start)) / (var(--fade-end) - var(--start))), 1);
+    --fade-out-progress: clamp(0, var(--slide-progress-out) / var(--end), 1);
+    --fade-out: calc(1 - var(--fade-out-progress));
+    opacity: calc(var(--fade-in) * var(--fade-out));
+  }
+}
+
+
+@media (max-width: 768px) {
+.experience-highlights__slide-image{
+  padding-left: 40px;
+}
+.slide-image-inner {
+ 
+  border-radius: calc(16px * (1 + 4 * var(--slide-progress-out)) * (1 + 4 * (1 - var(--shorted-progress-in))));
+}
+  
+}
